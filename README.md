@@ -25,16 +25,17 @@
 ## Использование
 Для запуска инструмента используйте следующую команду:
 ```python
-python graph.py <путь_к_graphviz> <имя_пакета> <выходной_файл> <максимальная_глубина> <URL_репозитория>
+python graph.py <Путь к PlantUML.jar> <URL репозитория> <Путь к выходной директории> <Количество дней для порога коммитов (30 по умолчанию)>
 ```
 ## Пример команды
 ```python
-python graph.py "F:/Projects/DzConf_2/PlantUML/plantuml-1.2024.8.jar" "F:/Projects/DzConf_2/Dz_local" "F:/Projects/DzConf_2/output" --days 30
+"F:/Projects/DzConf_2/PlantUML/plantuml-1.2024.8.jar" "https://github.com/Sw1dy/Dz.git" "F:/Projects/DzConf_2/output" --days 30
 ```
 ## Тестирование
 Для запуска тестов используйте следующую команду:
 ```python
 python -m unittest Test_graph.py
 ```
+image
 
 
