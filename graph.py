@@ -23,14 +23,14 @@ def visualize_graph(plantuml_path, output_file_path):
 def main():
     parser = argparse.ArgumentParser(description="Generate and visualize commit graph using PlantUML.")
     parser.add_argument("plantuml_path", help="Path to the PlantUML JAR file.")
-    parser.add_argument("repo_path", help="Path to the repository.")
+    parser.add_argument("repo_url", help="URL of the repository.")
     parser.add_argument("output_dir", help="Path to the output directory.")
     parser.add_argument("--days", type=int, default=30, help="Number of days for commit threshold.")
 
     args = parser.parse_args()
 
     plantuml_path = args.plantuml_path
-    repo_path = args.repo_path
+    repo_url = args.repo_url
     output_dir = args.output_dir
     days = args.days
 
@@ -39,6 +39,10 @@ def main():
 
     # Создание директории, если она не существует
     os.makedirs(output_dir, exist_ok=True)
+
+    # Клонирование репозитория
+    repo_path = os.path.join(output_dir, "cloned_repo")
+    Repo.clone_from(repo_url, repo_path)
 
     # Дата коммитов в репозитории (например, за последние 30 дней)
     date_threshold = datetime.now() - timedelta(days=days)
