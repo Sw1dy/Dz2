@@ -36,6 +36,6 @@ python graph.py <Путь к PlantUML.jar> <URL репозитория> <Пут�
 ```python
 python -m unittest Test_graph.py
 ```
-image
+![Скриншот тестов]()
 
 
