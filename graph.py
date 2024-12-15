@@ -40,9 +40,13 @@ def main():
     # Создание директории, если она не существует
     os.makedirs(output_dir, exist_ok=True)
 
-    # Клонирование репозитория
+    # Путь к клонированному репозиторию
     repo_path = os.path.join(output_dir, "cloned_repo")
-    Repo.clone_from(repo_url, repo_path)
+
+    # Проверка существования директории
+    if not os.path.exists(repo_path):
+        # Клонирование репозитория
+        Repo.clone_from(repo_url, repo_path)
 
     # Дата коммитов в репозитории (например, за последние 30 дней)
     date_threshold = datetime.now() - timedelta(days=days)
