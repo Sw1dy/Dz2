@@ -22,4 +22,19 @@
 
 Все функции визуализатора зависимостей должны быть покрыты тестами.
 
-## 
+## Использование
+Для запуска инструмента используйте следующую команду:
+```python
+python graph.py <путь_к_graphviz> <имя_пакета> <выходной_файл> <максимальная_глубина> <URL_репозитория>
+```
+## Пример команды
+```python
+python graph.py "F:/Projects/DzConf_2/PlantUML/plantuml-1.2024.8.jar" "F:/Projects/DzConf_2/Dz_local" "F:/Projects/DzConf_2/output" --days 30
+```
+## Тестирование
+Для запуска тестов используйте следующую команду:
+```python
+python -m unittest Test_graph.py
+```
+
+
