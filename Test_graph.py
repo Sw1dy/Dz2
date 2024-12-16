@@ -60,7 +60,7 @@ class TestGraphFunctions(unittest.TestCase):
     @patch('subprocess.run')
     def test_visualize_graph(self, mock_subprocess_run):
         # Путь к программе для визуализации графов (PlantUML)
-        plantuml_path = "F:/Projects/DzConf_2/PlantUML/plantuml-1.2024.8.jar"
+        plantuml_path = "C:/Users/Sw1dy/Dz2/PlantUML/plantuml-1.2024.8.jar"
 
         # Путь к файлу-результату в виде кода
         output_file_path = os.path.join(self.temp_dir, "graph.puml")
@@ -78,7 +78,7 @@ class TestGraphFunctions(unittest.TestCase):
     @patch('shutil.rmtree')
     def test_main(self, mock_rmtree, mock_visualize_graph, mock_generate_plantuml_code, mock_clone_from):
         # Путь к программе для визуализации графов (PlantUML)
-        plantuml_path = "F:/Projects/DzConf_2/PlantUML/plantuml-1.2024.8.jar"
+        plantuml_path = "C:/Users/Sw1dy/Dz2/PlantUML/plantuml-1.2024.8.jar"
 
         # URL репозитория
         repo_url = "https://github.com/example/repo.git"

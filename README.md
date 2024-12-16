@@ -29,7 +29,7 @@ python graph.py <Путь к PlantUML.jar> <URL репозитория> <Пут�
 ```
 ## Пример команды
 ```python
-"F:/Projects/DzConf_2/PlantUML/plantuml-1.2024.8.jar" "https://github.com/Sw1dy/Dz.git" "F:/Projects/DzConf_2/output" --days 30
+python graph.py "F:/Projects/DzConf_2/PlantUML/plantuml-1.2024.8.jar" "https://github.com/Sw1dy/Dz.git" "F:/Projects/DzConf_2/output" --days 30
 ```
 ## Тестирование
 Для запуска тестов используйте следующую команду:
