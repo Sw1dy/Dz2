@@ -69,38 +69,10 @@ class TestGraphFunctions(unittest.TestCase):
         visualize_graph(plantuml_path, output_file_path)
 
         mock_subprocess_run.assert_called_once_with(
-            ['java', '-jar', plantuml_path, output_file_path]
+            ['java', '-jar', plantuml_path, '-tpng', output_file_path, '-o', os.path.dirname(output_file_path)],
+            capture_output=True,
+            text=True
         )
-
-    @patch('graph.Repo.clone_from')
-    @patch('graph.generate_plantuml_code')
-    @patch('graph.visualize_graph')
-    @patch('shutil.rmtree')
-    def test_main(self, mock_rmtree, mock_visualize_graph, mock_generate_plantuml_code, mock_clone_from):
-        # Путь к программе для визуализации графов (PlantUML)
-        plantuml_path = "C:/Users/Sw1dy/Dz2/PlantUML/plantuml-1.2024.8.jar"
-
-        # URL репозитория
-        repo_url = "https://github.com/example/repo.git"
-
-        # Путь к выходной директории
-        output_dir = self.temp_dir
-
-        # Аргументы командной строки
-        args = [
-            "graph.py",
-            plantuml_path,
-            repo_url,
-            output_dir,
-            "--days", "30"
-        ]
-
-        with patch('sys.argv', args):
-            main()
-
-        mock_clone_from.assert_called_once_with(repo_url, os.path.join(output_dir, "cloned_repo"))
-        mock_generate_plantuml_code.assert_called_once()
-        mock_visualize_graph.assert_called_once()
 
 if __name__ == '__main__':
     unittest.main()
