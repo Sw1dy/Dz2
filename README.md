@@ -39,6 +39,6 @@ python graph.py "C:\Users\Sw1dy\Dz2\PlantUML\plantuml-1.2024.8.jar" "https://git
 ```python
 python -m unittest Test_graph.py
 ```
-![Скриншот тестов](https://github.com/Sw1dy/Dz2/blob/main/ResultTest.png)
+![Скриншот тестов](https://github.com/Sw1dy/Dz2/blob/main/ResultsTests.png)
 
 
