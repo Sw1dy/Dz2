@@ -1,21 +1,30 @@
 import os
 import subprocess
 import argparse
-from git import Repo, GitCommandError
 from datetime import datetime, timedelta
 
 def generate_plantuml_code(repo_path, output_file_path, date_threshold):
     print(f"Generating PlantUML code for repository at {repo_path}")
     try:
-        repo = Repo(repo_path)
-        commits = list(repo.iter_commits())
+        # Получение списка коммитов
+        result = subprocess.run(
+            ["git", "-C", repo_path, "log", "--pretty=format:%H %ct", "--since", date_threshold.isoformat()],
+            capture_output=True,
+            text=True
+        )
+        if result.returncode != 0:
+            print(f"Error getting commits: {result.stderr}")
+            return
+
+        commits = result.stdout.strip().split('\n')
 
         with open(output_file_path, 'w') as f:
             f.write("@startuml\n")
             for commit in commits:
-                commit_date = datetime.fromtimestamp(commit.committed_date)
+                hexsha, commit_date = commit.split()
+                commit_date = datetime.fromtimestamp(int(commit_date))
                 if commit_date > date_threshold:
-                    f.write(f"[{commit.hexsha}] -> [{commit.hexsha}]\n")
+                    f.write(f"[{hexsha}] -> [{hexsha}]\n")
             f.write("@enduml\n")
         print(f"PlantUML code generated at {output_file_path}")
     except Exception as e:
@@ -25,7 +34,11 @@ def visualize_graph(plantuml_path, output_file_path):
     print(f"Visualizing graph using PlantUML at {plantuml_path}")
     try:
         output_image_path = output_file_path.replace(".puml", ".png")
-        result = subprocess.run(["java", "-jar", plantuml_path, "-tpng", output_file_path, "-o", os.path.dirname(output_file_path)], capture_output=True, text=True)
+        result = subprocess.run(
+            ["java", "-jar", plantuml_path, "-tpng", output_file_path, "-o", os.path.dirname(output_file_path)],
+            capture_output=True,
+            text=True
+        )
         if result.returncode != 0:
             print(f"Error: {result.stderr}")
         else:
@@ -61,8 +74,15 @@ def main():
         try:
             # Клонирование репозитория
             print(f"Cloning repository from {repo_url} to {repo_path}")
-            Repo.clone_from(repo_url, repo_path)
-        except GitCommandError as e:
+            result = subprocess.run(
+                ["git", "clone", repo_url, repo_path],
+                capture_output=True,
+                text=True
+            )
+            if result.returncode != 0:
+                print(f"Error cloning repository: {result.stderr}")
+                return
+        except Exception as e:
             print(f"Error cloning repository: {e}")
             return
 

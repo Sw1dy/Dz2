@@ -2,9 +2,9 @@ import unittest
 import os
 import tempfile
 import shutil
+import subprocess
 from unittest.mock import patch, mock_open, MagicMock
 from graph import generate_plantuml_code, visualize_graph, main
-from git import Repo
 from datetime import datetime, timedelta
 
 class TestGraphFunctions(unittest.TestCase):
@@ -14,13 +14,15 @@ class TestGraphFunctions(unittest.TestCase):
         self.temp_dir = tempfile.mkdtemp()
         self.temp_repo_path = os.path.join(self.temp_dir, 'temp_repo')
         os.makedirs(self.temp_repo_path, exist_ok=True)
-        self.repo = Repo.init(self.temp_repo_path)
+
+        # Инициализируем Git репозиторий
+        subprocess.run(['git', 'init'], cwd=self.temp_repo_path)
 
         # Создаем коммиты для тестирования
         with open(os.path.join(self.temp_repo_path, 'testfile.txt'), 'w') as f:
             f.write('Test content')
-        self.repo.index.add(['testfile.txt'])
-        self.repo.index.commit('Initial commit')
+        subprocess.run(['git', 'add', 'testfile.txt'], cwd=self.temp_repo_path)
+        subprocess.run(['git', 'commit', '-m', 'Initial commit'], cwd=self.temp_repo_path)
 
     def tearDown(self):
         # Удаляем временную директорию
@@ -33,22 +35,20 @@ class TestGraphFunctions(unittest.TestCase):
 
     def test_add_commits(self):
         # Проверяем, что коммиты добавляются в репозиторий корректно
-        self.assertEqual(len(list(self.repo.iter_commits())), 1)
+        result = subprocess.run(['git', 'log', '--oneline'], cwd=self.temp_repo_path, capture_output=True, text=True)
+        self.assertEqual(len(result.stdout.strip().split('\n')), 1)
 
     @patch('builtins.open', new_callable=mock_open)
-    @patch('graph.Repo.iter_commits')
-    def test_generate_plantuml_code(self, mock_iter_commits, mock_file):
+    @patch('subprocess.run')
+    def test_generate_plantuml_code(self, mock_subprocess_run, mock_file):
         # Путь к файлу-результату в виде кода
         output_file_path = os.path.join(self.temp_dir, "graph.puml")
 
         # Дата коммитов в репозитории (например, за последние 30 дней)
         date_threshold = datetime.now() - timedelta(days=30)
 
-        # Создаем мок-объект для коммитов
-        mock_commit = MagicMock()
-        mock_commit.committed_date = datetime.now().timestamp()
-        mock_commit.hexsha = 'abc123'
-        mock_iter_commits.return_value = [mock_commit]
+        # Создаем мок-объект для вывода команды git log
+        mock_subprocess_run.return_value = MagicMock(stdout='abc123 1672531199\n', returncode=0)
 
         # Генерация PlantUML кода
         generate_plantuml_code(self.temp_repo_path, output_file_path, date_threshold)
